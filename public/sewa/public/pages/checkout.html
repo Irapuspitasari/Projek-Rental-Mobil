@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Checkout</title>
+
+        <link rel="stylesheet" href="../css/main.css">
+        <script defer src="https://unpkg.com/alpinejs@3.7.0/dist/cdn.min.js"></script>
+        <style>
+            [x-cloak] {
+                display: none;
+            }
+        </style>
+    </head>
+
+    <body>
+        <nav class="container relative my-4 lg:my-10">
+            <div class="flex flex-col justify-between w-full lg:flex-row lg:items-center">
+                <!-- Logo & Toggler Button here -->
+                <div class="flex items-center justify-between">
+                    <!-- LOGO -->
+                    <a href="./index.html">
+                        <img src="../assets/svgs/logo.svg" alt="stream" />
+                    </a>
+                    <!-- RESPONSIVE NAVBAR BUTTON TOGGLER -->
+                    <div class="block lg:hidden">
+                        <button class="p-1 outline-none mobileMenuButton" id="navbarToggler" data-target="#navigation">
+                            <svg class="text-dark w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 8h16M4 16h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Nav Menu -->
+                <div class="hidden w-full lg:block" id="navigation">
+                    <div
+                        class="flex flex-col items-baseline gap-4 mt-6 lg:justify-between lg:flex-row lg:items-center lg:mt-0">
+                        <div
+                            class="flex flex-col w-full ml-auto lg:w-auto gap-4 lg:gap-[50px] lg:items-center lg:flex-row">
+                            <a href="./index.html" class="nav-link-item">Landing</a>
+                            <a href="#!" class="nav-link-item">Catalog</a>
+                            <a href="#!" class="nav-link-item">Benefits</a>
+                            <a href="#!" class="nav-link-item">Stories</a>
+                            <a href="#!" class="nav-link-item">Maps</a>
+                        </div>
+                        <div
+                            class="relative flex flex-col w-full ml-auto lg:w-auto lg:gap-12 lg:items-center lg:flex-row">
+                            <!-- GUEST USER -->
+                            <!-- <a href="sign-in.html" class="btn-secondary">
+                                Log In
+                            </a> -->
+
+                            <!-- AUTH USER -->
+                            <a href="javascript:void(0);"
+                                class="flex flex-row-reverse lg:flex-row items-center justify-end lg:justify-start gap-[10px]"
+                                onclick="toggleDropdown(this)">
+                                <p class="text-base font-semibold text-dark">
+                                    Hello <br> Sakhirna
+                                </p>
+                                <span class="p-1 rounded-full w-[55px] border-2 border-secondary">
+                                    <img src="../assets/images/user.png" class="w-full" alt="">
+                                </span>
+                            </a>
+                            <!-- Dropdown menu -->
+                            <div class="absolute bottom-0 lg:right-0 translate-y-[107%] z-50 w-max hidden"
+                                id="userDropdownMenu">
+                                <div class="border border-secondary rounded-[22px] bg-white p-[26px]">
+                                    <div class="flex flex-col gap-4">
+                                        <a href="#!"
+                                            class="text-base font-medium transition-all text-dark hover:underline underline-offset-2 decoration-1">
+                                            My Transactions
+                                        </a>
+                                        <a href="#!"
+                                            class="text-base font-medium transition-all text-dark hover:underline underline-offset-2 decoration-1">
+                                            Rewards
+                                        </a>
+                                        <a href="#!"
+                                            class="text-base font-medium transition-all text-dark hover:underline underline-offset-2 decoration-1">
+                                            Add Benefit
+                                        </a>
+                                        <a href="#!"
+                                            class="text-base font-medium transition-all text-dark hover:underline underline-offset-2 decoration-1">
+                                            Payments
+                                        </a>
+                                        <a href="#!"
+                                            class="text-base font-medium transition-all text-dark hover:underline underline-offset-2 decoration-1">
+                                            Logout
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <section class="bg-darkGrey relative py-[70px]">
+            <div class="container">
+                <header class="mb-[30px]">
+                    <h2 class="font-bold text-dark text-[26px] mb-1">
+                        Checkout & Drive Faster
+                    </h2>
+                    <p class="text-base text-secondary">We will help you get ready today</p>
+                </header>
+
+                <div class="flex items-center gap-5 lg:justify-between">
+                    <!-- Form Card -->
+                    <form action="" class="bg-white p-[30px] pb-10 rounded-3xl max-w-[490px] w-full" x-data="app"
+                        x-cloak>
+                        <div class="grid grid-cols-2 items-center gap-y-6 gap-x-4 lg:gap-x-[30px]">
+                            <!-- Full Name -->
+                            <div class="flex flex-col col-span-2 gap-3">
+                                <label for="" class="text-base font-semibold text-dark">
+                                    Full Name
+                                </label>
+                                <input type="text" name="fullname" id="fullname"
+                                    class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px]"
+                                    placeholder="Insert Full Name" value="Shayna Zakirra">
+                            </div>
+
+                            <!-- RESULT DATES FROM-UNTIL -->
+                            <div class="col-span-2 grid-cols-2 gap-y-6 gap-x-4 lg:gap-x-[30px] hidden">
+                                <!-- Result Date From [HIDDEN] -->
+                                <div class="flex flex-col col-span-1 gap-3">
+                                    <label for="" class="text-base font-semibold text-dark">
+                                        From (result)
+                                    </label>
+                                    <input type="text" name="dateFrom" id="dateFrom"
+                                        class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] focus:before:appearance-none focus:before:!content-none"
+                                        placeholder="Select Date" readonly x-model="dateFromYmd">
+                                </div>
+                                <!-- Result Date Until [HIDDEN] -->
+                                <div class="flex flex-col col-span-1 gap-3">
+                                    <label for="" class="text-base font-semibold text-dark">
+                                        Until (result)
+                                    </label>
+                                    <input type="text" name="dateUntil" id="dateUntil"
+                                        class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] focus:before:appearance-none focus:before:!content-none"
+                                        placeholder="Select Date" readonly x-model="dateToYmd">
+                                </div>
+                            </div>
+
+                            <!-- START: INPUT DATE -->
+                            <div class="col-span-2 grid grid-cols-2 gap-y-6 gap-x-4 lg:gap-x-[30px] relative"
+                                @keydown.escape="closeDatepicker()" @click.outside="closeDatepicker()">
+                                <!-- Date From -->
+                                <div class="flex flex-col col-span-1 gap-3">
+                                    <label for="" class="text-base font-semibold text-dark">
+                                        From
+                                    </label>
+                                    <input readonly type="text"
+                                        class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] focus:before:appearance-none focus:before:!content-none"
+                                        placeholder="Select Date"
+                                        @click="endToShow = 'from'; init(); showDatepicker = true"
+                                        x-model="outputDateFromValue">
+                                </div>
+                                <!-- Date Until -->
+                                <div class="flex flex-col col-span-1 gap-3">
+                                    <label for="" class="text-base font-semibold text-dark">
+                                        Until
+                                    </label>
+                                    <input readonly type="text"
+                                        class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] focus:before:appearance-none focus:before:!content-none"
+                                        placeholder="Select Date"
+                                        @click="endToShow = 'to'; init(); showDatepicker = true"
+                                        x-model="outputDateToValue">
+                                </div>
+
+                                <!-- START: Date-Range Picker -->
+                                <div class="absolute p-5 mt-2 bg-white rounded-[18px] top-full border border-grey w-full z-50 shadow-[0_22px_50px_0_rgba(212,214,218,0.25)]"
+                                    x-show="showDatepicker" x-transition>
+                                    <div class="flex flex-col items-center">
+
+                                        <!-- Month -->
+                                        <div class="w-full mb-5">
+                                            <div class="flex items-center justify-center gap-1">
+                                                <button type="button"
+                                                    class="inline-flex p-1 mr-2 transition duration-100 ease-in-out rounded-full cursor-pointer hover:bg-gray-200"
+                                                    @click="if (month == 0) {year--; month=11;} else {month--;} getNoOfDays()">
+                                                    <svg class="inline-flex w-6 h-6 text-gray-500" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M15 19l-7-7 7-7" />
+                                                    </svg>
+                                                </button>
+                                                <span x-text="MONTH_NAMES[month]"
+                                                    class="text-base font-semibold text-dark"></span>
+                                                <span x-text="year" class="text-base font-semibold text-dark"></span>
+                                                <button type="button"
+                                                    class="inline-flex p-1 ml-2 transition duration-100 ease-in-out rounded-full cursor-pointer hover:bg-gray-200"
+                                                    @click="if (month == 11) {year++; month=0;} else {month++;}; getNoOfDays()">
+                                                    <svg class="inline-flex w-6 h-6 text-gray-500" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Day Names -->
+                                        <div class="flex flex-wrap w-full mb-3 -mx-1">
+                                            <template x-for="(day, index) in DAYS" :key="index">
+                                                <div style="width: 14.26%" class="px-1">
+                                                    <div x-text="day" class="text-sm font-medium text-center text-dark">
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+
+                                        <!-- Dates -->
+                                        <div class="flex flex-wrap -mx-1">
+                                            <template x-for="blankday in blankdays">
+                                                <div style="width: 14.28%"
+                                                    class="p-1 text-sm text-center border border-transparent">
+                                                </div>
+                                            </template>
+                                            <template x-for="(date, dateIndex) in no_of_days" :key="dateIndex">
+                                                <div style="width: 14.28%">
+                                                    <div @click="getDateValue(date, false)"
+                                                        @mouseover="getDateValue(date, true)" x-text="date"
+                                                        class="p-1 text-sm leading-loose text-center transition duration-100 ease-in-out cursor-pointer"
+                                                        :class="{'font-bold': isToday(date) == true, 'bg-primary text-white rounded-l-full': isDateFrom(date) == true, 'bg-primary text-white rounded-r-full': isDateTo(date) == true, 'bg-[#E2E1FF]': isInRange(date) == true, 'text-slate-300': isPast(date) == true }">
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END: Date-Range Picker -->
+                            </div>
+                            <!-- END: INPUT DATE -->
+
+                            <!-- Delivery Address -->
+                            <div class="flex flex-col col-span-2 gap-3">
+                                <label for="" class="text-base font-semibold text-dark">
+                                    Delivery Address
+                                </label>
+                                <input type="text" name="address" id="address"
+                                    class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px]"
+                                    placeholder="Where should we deliver your car?">
+                            </div>
+
+                            <!-- City -->
+                            <div class="flex flex-col col-span-1 gap-3">
+                                <label for="" class="text-base font-semibold text-dark">
+                                    City
+                                </label>
+                                <input type="text" name="city" id="city"
+                                    class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] focus:before:appearance-none focus:before:!content-none"
+                                    placeholder="City Name">
+                            </div>
+
+                            <!-- Post Code -->
+                            <div class="flex flex-col col-span-1 gap-3">
+                                <label for="" class="text-base font-semibold text-dark">
+                                    Write Code
+                                </label>
+                                <input type="number" name="postCode" id="postCode"
+                                    class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] focus:before:appearance-none focus:before:!content-none"
+                                    placeholder="Write code">
+                            </div>
+
+                            <!-- CTA Button -->
+                            <div class="col-span-2 mt-[26px]">
+                                <!-- Button Primary -->
+                                <div class="p-1 rounded-full bg-primary group">
+                                    <a href="payment.html" class="btn-primary">
+                                        <p>
+                                            Continue
+                                        </p>
+                                        <img src="../assets/svgs/ic-arrow-right.svg" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <img src="../assets/images/porsche_small.webp" class="max-w-[50%] hidden lg:block -mr-[100px]"
+                        alt="">
+                </div>
+            </div>
+        </section>
+
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../scripts/script.js"></script>
+
+        <script type="text/javascript" src="../scripts/dateRangePicker.js"></script>
+    </body>
+
+</html>

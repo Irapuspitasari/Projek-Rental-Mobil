@@ -47,4 +47,8 @@ class Item extends Model
     {
         return $this->reviews()->where('user_id', $userId)->exists();
     }
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

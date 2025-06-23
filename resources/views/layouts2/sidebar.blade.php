@@ -69,6 +69,12 @@
                 <div data-i18n="Tables">Item</div>
             </a>
         </li>
+        <li class="menu-item">
+            <a href="/bookings" class="menu-link">
+                <i class="menu-icon icon-base ri ri-car-line"></i>
+                <div data-i18n="Tables">Booking</div>
+            </a>
+        </li>
         <!-- Misc -->
         <li class="menu-header mt-7"><span class="menu-header-text">More Menu</span></li>
         <li class="menu-item">

@@ -7,6 +7,7 @@ use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
 
 /*
@@ -36,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 Route::resource('brands', BrandController::class);
 Route::resource('types', TypeController::class);
 Route::resource('items', ItemController::class);
@@ -54,3 +55,23 @@ Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
     ->middleware('auth');
 
 Route::resource('users', UserController::class);
+Route::prefix('bookings')->group(function () {
+    Route::get('/', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::post('/', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/{slug}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::get('/{slug}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+    Route::put('/{slug}', [BookingController::class, 'update'])->name('bookings.update');
+    Route::delete('/{slug}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+
+    // Booking Actions
+    Route::post('/{slug}/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
+    Route::post('/{slug}/on-rent', [BookingController::class, 'markAsOnRent'])->name('bookings.on-rent');
+    Route::post('/{slug}/complete', [BookingController::class, 'markAsCompleted'])->name('bookings.complete');
+    Route::post('/{slug}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+
+    // Payment Routes
+    Route::get('/{slug}/payment', [BookingController::class, 'showPaymentForm'])->name('bookings.payment');
+    Route::post('/bookings/{slug}/process-payment', [BookingController::class, 'processPayment'])
+        ->name('bookings.processPayment');
+});

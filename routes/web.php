@@ -74,4 +74,8 @@ Route::prefix('bookings')->group(function () {
     Route::get('/{slug}/payment', [BookingController::class, 'showPaymentForm'])->name('bookings.payment');
     Route::post('/bookings/{slug}/process-payment', [BookingController::class, 'processPayment'])
         ->name('bookings.processPayment');
+    Route::post('/payment/notification', [BookingController::class, 'handlePaymentNotification'])
+        ->name('payment.notification');
+    Route::get('/payment/return', [BookingController::class, 'paymentReturn'])
+        ->name('payment.return');
 });

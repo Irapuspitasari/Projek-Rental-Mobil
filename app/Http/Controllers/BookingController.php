@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
-use App\Models\Item;
-use App\Models\Overtime;
-use App\Models\Payment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Models\Item;
+use App\Models\Booking;
+use App\Models\Payment;
+use App\Models\Overtime;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Services\MidtransService;
+use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
 {
@@ -18,7 +19,7 @@ class BookingController extends Controller
     {
         $bookings = Booking::with(['item', 'user', 'payment'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->get();// ->paginate(10);
 
         return view('bookings.index', compact('bookings'));
     }
@@ -256,56 +257,56 @@ class BookingController extends Controller
     }
 
     // Mark booking as Completed (admin action)
-public function markAsCompleted(Request $request, $slug)
-{
-    $booking = Booking::where('slug', $slug)->firstOrFail();
+    public function markAsCompleted(Request $request, $slug)
+    {
+        $booking = Booking::where('slug', $slug)->firstOrFail();
 
-    if ($booking->status !== 'On Rent') {
-        return redirect()->back()
-            ->with('error', 'Hanya booking dengan status On Rent yang dapat diselesaikan.');
-    }
+        if ($booking->status !== 'On Rent') {
+            return redirect()->back()
+                ->with('error', 'Hanya booking dengan status On Rent yang dapat diselesaikan.');
+        }
 
-    $validator = Validator::make($request->all(), [
-        'actual_end_date' => 'required|date',
-    ]);
-
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
-    }
-
-    // Parse the actual end date with time
-    $actualEndDate = Carbon::parse($request->actual_end_date);
-
-    // Update booking status to Completed
-    $booking->update([
-        'status' => 'Completed',
-        'actual_end_date' => $actualEndDate,
-        'is_overtime' => false // Default false, akan diupdate jika ada overtime
-    ]);
-
-    // Hitung overtime jika ada
-    $overtimeData = $booking->calculateOvertime();
-
-    if ($overtimeData) {
-        $booking->overtime()->create([
-            'hours' => $overtimeData['hours'],
-            'fee_per_hour' => $overtimeData['fee_per_hour'],
-            'total_fee' => $overtimeData['total_fee'],
-            'description' => 'Terlambat pengembalian'
+        $validator = Validator::make($request->all(), [
+            'actual_end_date' => 'required|date',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // Parse the actual end date with time
+        $actualEndDate = Carbon::parse($request->actual_end_date);
+
+        // Update booking status to Completed
         $booking->update([
-            'overtime_fee' => $overtimeData['total_fee'],
-            'total_price' => $booking->total_price + $overtimeData['total_fee'],
-            'is_overtime' => true
+            'status' => 'Completed',
+            'actual_end_date' => $actualEndDate,
+            'is_overtime' => false // Default false, akan diupdate jika ada overtime
         ]);
-    }
 
-    return redirect()->back()
-        ->with('success', 'Booking completed successfully.');
-}
+        // Hitung overtime jika ada
+        $overtimeData = $booking->calculateOvertime();
+
+        if ($overtimeData) {
+            $booking->overtime()->create([
+                'hours' => $overtimeData['hours'],
+                'fee_per_hour' => $overtimeData['fee_per_hour'],
+                'total_fee' => $overtimeData['total_fee'],
+                'description' => 'Terlambat pengembalian'
+            ]);
+
+            $booking->update([
+                'overtime_fee' => $overtimeData['total_fee'],
+                'total_price' => $booking->total_price + $overtimeData['total_fee'],
+                'is_overtime' => true
+            ]);
+        }
+
+        return redirect()->back()
+            ->with('success', 'Booking completed successfully.');
+    }
 
     // Cancel booking
     public function cancel($slug)
@@ -337,6 +338,42 @@ public function markAsCompleted(Request $request, $slug)
     }
 
     // Process payment
+    // public function processPayment(Request $request, $slug)
+    // {
+    //     $booking = Booking::where('slug', $slug)->firstOrFail();
+
+    //     $validator = Validator::make($request->all(), [
+    //         'method' => 'required|in:Transfer,Cash',
+    //         'amount' => 'required|numeric|min:' . $booking->total_price,
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return redirect()->back()
+    //             ->withErrors($validator)
+    //             ->withInput();
+    //     }
+
+    //     // Create payment record
+    //     $payment = Payment::create([
+    //         'booking_id' => $booking->id,
+    //         'slug' => Str::slug(Str::random(10)),
+    //         'method' => $request->method,
+    //         'status' => $request->method === 'Cash' ? 'Paid' : 'Pending',
+    //         'amount' => $request->amount,
+    //         'payment_url' => $request->method === 'Transfer' ? 'generated-payment-url' : null,
+    //         'payment_date' => $request->method === 'Cash' ? now() : null,
+    //     ]);
+
+    //     // Update booking status if paid
+    //     if ($request->method === 'Cash') {
+    //         $booking->update(['status' => 'Confirmed']);
+    //     }
+
+    //     return redirect()->route('bookings.show', $booking->slug)
+    //         ->with('success', $request->method === 'Cash'
+    //             ? 'Pembayaran tunai berhasil dicatat.'
+    //             : 'Silakan selesaikan pembayaran transfer.');
+    // }
     public function processPayment(Request $request, $slug)
     {
         $booking = Booking::where('slug', $slug)->firstOrFail();
@@ -352,25 +389,128 @@ public function markAsCompleted(Request $request, $slug)
                 ->withInput();
         }
 
-        // Create payment record
-        $payment = Payment::create([
-            'booking_id' => $booking->id,
-            'slug' => Str::slug(Str::random(10)),
-            'method' => $request->method,
-            'status' => $request->method === 'Cash' ? 'Paid' : 'Pending',
-            'amount' => $request->amount,
-            'payment_url' => $request->method === 'Transfer' ? 'generated-payment-url' : null,
-            'payment_date' => $request->method === 'Cash' ? now() : null,
-        ]);
-
-        // Update booking status if paid
+        // Handle Cash payment
         if ($request->method === 'Cash') {
+            $payment = Payment::create([
+                'booking_id' => $booking->id,
+                'slug' => Str::slug(Str::random(10)),
+                'method' => $request->method,
+                'status' => 'Paid',
+                'amount' => $request->amount,
+                'payment_date' => now(),
+            ]);
+
             $booking->update(['status' => 'Confirmed']);
+
+            return redirect()->route('bookings.show', $booking->slug)
+                ->with('success', 'Pembayaran tunai berhasil dicatat.');
+        }
+
+        // Handle Transfer payment (Midtrans)
+        try {
+            $midtransService = new MidtransService();
+
+            // Generate unique order ID
+            $orderId = 'BOOK-' . $booking->id . '-' . time();
+
+            // Prepare transaction details
+            $transactionDetails = [
+                'transaction_details' => [
+                    'order_id' => $orderId,
+                    'gross_amount' => $request->amount,
+                ],
+                'customer_details' => [
+                    'first_name' => $booking->name,
+                    'email' => $booking->user->email,
+                    'phone' => '', // Add phone if available
+                ],
+                'item_details' => [
+                    [
+                        'id' => $booking->item_id,
+                        'price' => $booking->total_price,
+                        'quantity' => 1,
+                        'name' => 'Booking #' . $booking->slug,
+                    ]
+                ],
+            ];
+
+            // Create payment record first
+            $payment = Payment::create([
+                'booking_id' => $booking->id,
+                'slug' => Str::slug(Str::random(10)),
+                'method' => $request->method,
+                'status' => 'Paid',
+                'amount' => $request->amount,
+                'payment_reference' => $orderId,
+            ]);
+
+            $booking->update(['status' => 'Confirmed']);
+
+            // Get Snap payment URL
+            $snapToken = $midtransService->createTransaction($transactionDetails);
+
+            // Update payment with the payment URL
+            $payment->update([
+                'payment_url' => $snapToken->redirect_url
+            ]);
+
+            return redirect($snapToken->redirect_url);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat memproses pembayaran: ' . $e->getMessage());
+        }
+    }
+    public function handlePaymentNotification(Request $request)
+    {
+        try {
+            $midtransService = new MidtransService();
+            $notification = $midtransService->handleNotification($request);
+
+            // Find payment by order_id (payment_reference)
+            $payment = Payment::where('payment_reference', $notification['payment_reference'])
+                ->firstOrFail();
+
+            // Update payment status based on notification
+            if ($notification['status'] == 'capture' || $notification['status'] == 'settlement') {
+                $payment->update([
+                    'status' => 'Paid',
+                    'payment_date' => now(),
+                ]);
+
+                // Update booking status if needed
+                $booking = $payment->booking;
+                if ($booking->status === 'Pending') {
+                    $booking->update(['status' => 'Confirmed']);
+                }
+            } elseif ($notification['status'] == 'expire') {
+                $payment->update(['status' => 'Expired']);
+            } elseif ($notification['status'] == 'deny' || $notification['status'] == 'cancel') {
+                $payment->update(['status' => 'Failed']);
+            }
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+    public function paymentReturn(Request $request)
+    {
+        $orderId = $request->order_id;
+
+        if (!$orderId) {
+            return redirect()->route('bookings.index')
+                ->with('error', 'Invalid payment return');
+        }
+
+        $payment = Payment::where('payment_reference', $orderId)->firstOrFail();
+        $booking = $payment->booking;
+
+        if ($payment->status === 'Paid') {
+            return redirect()->route('bookings.show', $booking->slug)
+                ->with('success', 'Pembayaran berhasil diproses');
         }
 
         return redirect()->route('bookings.show', $booking->slug)
-            ->with('success', $request->method === 'Cash'
-                ? 'Pembayaran tunai berhasil dicatat.'
-                : 'Silakan selesaikan pembayaran transfer.');
+            ->with('warning', 'Pembayaran sedang diproses');
     }
 }

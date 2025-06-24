@@ -10,7 +10,7 @@
                 <a href="{{ route('bookings.edit', $booking->slug) }}" class="btn btn-warning">Edit</a>
             @endif
 
-            @if(auth()->user()->is_admin)
+            {{-- @if(auth()->user()->is_admin) --}}
                 @if($booking->status == 'Pending')
                     <form action="{{ route('bookings.confirm', $booking->slug) }}" method="POST" class="d-inline">
                         @csrf
@@ -24,7 +24,7 @@
                 @elseif($booking->status == 'On Rent')
                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#completeModal">Selesaikan</button>
                 @endif
-            @endif
+            {{-- @endif --}}
 
             @if(in_array($booking->status, ['Pending', 'Confirmed']))
                 <form action="{{ route('bookings.cancel', $booking->slug) }}" method="POST" class="d-inline">

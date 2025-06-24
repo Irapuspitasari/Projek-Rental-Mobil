@@ -21,6 +21,7 @@ class Payment extends Model
         'status',
         'amount',
         'payment_url',
+        'payment_reference',
         'payment_date',
         'notes'
     ];

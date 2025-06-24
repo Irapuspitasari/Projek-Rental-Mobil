@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('status', ['Pending', 'Paid', 'Failed', 'Expired']);
             $table->decimal('amount', 12, 2);
             $table->string('payment_url')->nullable();
+            $table->string('payment_reference')->nullable()->index();
             $table->dateTime('payment_date')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();

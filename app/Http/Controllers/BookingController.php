@@ -19,14 +19,28 @@ class BookingController extends Controller
     {
         $bookings = Booking::with(['item', 'user', 'payment'])
             ->orderBy('created_at', 'desc')
-            ->get();// ->paginate(10);
+            ->get(); // ->paginate(10);
 
         return view('bookings.index', compact('bookings'));
     }
 
     // Show the form for creating a new booking
-    public function create()
+    // public function create()
+    // {
+    //     $items = Item::all();
+    //     return view('bookings.create', compact('items'));
+    // }
+    public function create(Request $request)
     {
+        $item_slug = $request->item_slug;
+
+        // Jika ada item_slug, langsung ambil item tersebut
+        if ($item_slug) {
+            $item = Item::where('slug', $item_slug)->firstOrFail();
+            return view('bookings.create', compact('item'));
+        }
+
+        // Jika tidak ada item_slug, tampilkan semua item (untuk case lain)
         $items = Item::all();
         return view('bookings.create', compact('items'));
     }
@@ -442,6 +456,7 @@ class BookingController extends Controller
                 'status' => 'Paid',
                 'amount' => $request->amount,
                 'payment_reference' => $orderId,
+                'payment_date' => now(),
             ]);
 
             $booking->update(['status' => 'Confirmed']);

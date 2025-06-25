@@ -1,67 +1,135 @@
-@extends('layouts2.app')
+@extends('layouts1.app')
 
 @section('content')
-<div class="container">
-    <h1 class="mb-4">Buat Booking Baru</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-    <form action="{{ route('bookings.store') }}" method="POST">
-        @csrf
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header">Informasi Penyewa</div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama Lengkap</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Alamat</label>
-                            <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="city" class="form-label">Kota</label>
-                                <input type="text" class="form-control" id="city" name="city" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="zip" class="form-label">Kode Pos</label>
-                                <input type="text" class="form-control" id="zip" name="zip">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Laravel asset helper for CSS -->
+    <link rel="stylesheet" href="{{ asset('sewa/public/css/main.css') }}">
+    <script defer src="https://unpkg.com/alpinejs@3.7.0/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
+</head>
 
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header">Detail Penyewaan</div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="item_id" class="form-label">Pilih Item</label>
-                            <select class="form-select" id="item_id" name="item_id" required>
+<body>
+
+    <!-- Main Content -->
+    <section class="bg-darkGrey relative py-[70px]">
+        <div class="container">
+            <header class="mb-[30px]">
+                <h2 class="font-bold text-dark text-[26px] mb-1">
+                    Checkout & Drive Faster
+                </h2>
+                <p class="text-base text-secondary">We will help you get ready today</p>
+            </header>
+
+            <div class="flex items-center gap-5 lg:justify-between">
+                <!-- Form Card -->
+                <form action="{{ route('bookings.store') }}" method="POST"
+                    class="bg-white p-[30px] pb-10 rounded-3xl max-w-[490px] w-full" x-data="app" x-cloak>
+                    @csrf
+
+                    <div class="grid grid-cols-2 items-center gap-y-6 gap-x-4 lg:gap-x-[30px]">
+                        <!-- Full Name -->
+                        <div class="flex flex-col col-span-2 gap-3">
+                            <label for="name" class="text-base font-semibold text-dark">
+                                Nama Lengkap
+                            </label>
+                            <input type="text" name="name" id="name" required
+                                class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px]"
+                                placeholder="Nama Lengkap">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="flex flex-col col-span-2 gap-3">
+                            <label for="address" class="text-base font-semibold text-dark">
+                                Alamat
+                            </label>
+                            <input type="text" name="address" id="address" required
+                                class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px]"
+                                placeholder="Alamat">
+                            {{-- <textarea name="address" id="address" rows="3" required
+                                class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-2xl"
+                                placeholder="Alamat Lengkap"></textarea> --}}
+                        </div>
+
+                        <!-- City -->
+                        <div class="flex flex-col col-span-1 gap-3">
+                            <label for="city" class="text-base font-semibold text-dark">
+                                Kota
+                            </label>
+                            <input type="text" name="city" id="city" required
+                                class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px]"
+                                placeholder="Nama Kota">
+                        </div>
+
+                        <!-- Zip Code -->
+                        <div class="flex flex-col col-span-1 gap-3">
+                            <label for="zip" class="text-base font-semibold text-dark">
+                                Kode Pos
+                            </label>
+                            <input type="text" name="zip" id="zip"
+                                class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px]"
+                                placeholder="Kode Pos">
+                        </div>
+
+                        <!-- Item Selection - Hanya ditampilkan jika tidak ada item tertentu -->
+                        @if(!isset($item))
+                        <div class="flex flex-col col-span-2 gap-3">
+                            <label for="item_id" class="text-base font-semibold text-dark">
+                                Pilih Item
+                            </label>
+                            <select name="item_id" id="item_id" required
+                                class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] appearance-none">
                                 <option value="">-- Pilih Item --</option>
                                 @foreach($items as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }} - Rp {{ number_format($item->price, 0, ',', '.') }}/hari</option>
+                                <option value="{{ $item->id }}">{{ $item->name }} - Rp {{ number_format($item->price, 0,
+                                    ',', '.') }}/hari</option>
                                 @endforeach
                             </select>
                         </div>
+                        @else
+                        <!-- Jika ada item tertentu, buat input hidden -->
+                        <input type="hidden" name="item_id" value="{{ $item->id }}">
+                        @endif
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="start_date" class="form-label">Tanggal Mulai</label>
-                                <input type="date" class="form-control" id="start_date" name="start_date" required>
+
+                        <!-- Date Range Picker -->
+                        <div class="col-span-2 grid grid-cols-2 gap-y-6 gap-x-4 lg:gap-x-[30px]">
+                            <!-- Start Date -->
+                            <div class="flex flex-col col-span-1 gap-3">
+                                <label for="start_date" class="text-base font-semibold text-dark">
+                                    Mulai
+                                </label>
+                                <input type="date" name="start_date" id="start_date" required
+                                    class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] appearance-none">
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="end_date" class="form-label">Tanggal Selesai</label>
-                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                            <!-- End Date -->
+                            <div class="flex flex-col col-span-1 gap-3">
+                                <label for="end_date" class="text-base font-semibold text-dark">
+                                    Selesai
+                                </label>
+                                <input type="date" name="end_date" id="end_date" required
+                                    class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] appearance-none">
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="region" class="form-label">Daerah Sewa</label>
-                            <select class="form-select" id="region" name="region" required>
+                        <!-- Region -->
+                        <div class="flex flex-col col-span-2 gap-3">
+                            <label for="region" class="text-base font-semibold text-dark">
+                                Daerah Sewa
+                            </label>
+                            <select name="region" id="region" required
+                                class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px] appearance-none">
                                 <option value="">-- Pilih Daerah --</option>
                                 <option value="Jateng">Jawa Tengah</option>
                                 <option value="DIY">Daerah Istimewa Yogyakarta</option>
@@ -69,31 +137,63 @@
                             </select>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Opsi Driver</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="driver_option" id="with_driver" value="With Driver" required>
-                                <label class="form-check-label" for="with_driver">Dengan Driver</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="driver_option" id="without_driver" value="Without Driver">
-                                <label class="form-check-label" for="without_driver">Tanpa Driver</label>
+                        <!-- Driver Option -->
+                        <div class="flex flex-col col-span-2 gap-3">
+                            <label class="text-base font-semibold text-dark">
+                                Opsi Driver
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-2">
+                                    <input type="radio" name="driver_option" id="with_driver" value="With Driver"
+                                        required class="w-5 h-5 text-primary focus:ring-primary border-grey">
+                                    <label for="with_driver" class="text-base font-medium text-dark">Dengan
+                                        Driver</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="radio" name="driver_option" id="without_driver" value="Without Driver"
+                                        class="w-5 h-5 text-primary focus:ring-primary border-grey">
+                                    <label for="without_driver" class="text-base font-medium text-dark">Tanpa
+                                        Driver</label>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="notes" class="form-label">Catatan Tambahan</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+                        <!-- Notes -->
+                        <div class="flex flex-col col-span-2 gap-3">
+                            <label for="notes" class="text-base font-semibold text-dark">
+                                Catatan
+                            </label>
+                            <input type="text" name="notes" id="notes" required
+                                class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-[50px]"
+                                placeholder="Catatan tambahan">
+                            {{-- <textarea name="notes" id="notes" rows="2"
+                                class="text-base font-medium focus:border-primary focus:outline-none placeholder:text-secondary placeholder:font-normal px-[26px] py-4 border border-grey rounded-2xl"
+                                placeholder="Catatan tambahan"></textarea> --}}
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col-span-6 mt-[26px]">
+                                <button type="submit" class="btn-primary">
+                                    Buat Booking
+                                    {{-- <img src="{{ asset('sewa/public/assets/svgs/ic-arrow-right.svg') }}" alt="">
+                                    --}}
+                                </button>
                         </div>
                     </div>
-                </div>
+                </form>
+
+                <img src="{{ asset('sewa/public/assets/images/porsche_small.webp') }}"
+                    class="max-w-[50%] hidden lg:block -mr-[100px]" alt="">
             </div>
         </div>
+    </section>
 
-        <div class="d-flex justify-content-between">
-            <a href="{{ route('bookings.index') }}" class="btn btn-secondary">Kembali</a>
-            <button type="submit" class="btn btn-primary">Buat Booking</button>
-        </div>
-    </form>
-</div>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <!-- Laravel asset helper for JS files -->
+    <script type="text/javascript" src="{{ asset('sewa/public/scripts/script.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('sewa/public/scripts/dateRangePicker.js') }}"></script>
+</body>
+
+</html>
 @endsection

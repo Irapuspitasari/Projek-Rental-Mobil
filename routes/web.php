@@ -58,6 +58,7 @@ Route::resource('users', UserController::class);
 Route::prefix('bookings')->group(function () {
     Route::get('/', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::get('/create/{item_slug?}', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/{slug}', [BookingController::class, 'show'])->name('bookings.show');
     Route::get('/{slug}/edit', [BookingController::class, 'edit'])->name('bookings.edit');

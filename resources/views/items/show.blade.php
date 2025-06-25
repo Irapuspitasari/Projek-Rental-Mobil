@@ -88,7 +88,8 @@
                             </div>
                             <div class="w-full max-w-[70%]">
                                 <div class="p-1 rounded-full bg-primary group">
-                                    <a href="checkout.html" class="btn-primary">
+                                    <a href="{{ route('bookings.create', ['item_slug' => $item->slug]) }}"
+                                        class="btn-primary">
                                         <p>Rent Now</p>
                                         <img src="{{ asset('sewa/public/assets/svgs/ic-arrow-right.svg') }}"
                                             alt="Rent Now">
@@ -169,7 +170,7 @@
                     </div>
                     @empty
                     <div class="text-center py-8">
-                        <img src="{{ asset('sewa/public/assets/svgs/ic-empty-review.svg') }}"
+                        <img src="{{ asset('sewa/public/assets/svgs/file-list-3-line.svg') }}"
                             class="h-16 w-16 mx-auto mb-4" alt="No reviews">
                         <p class="text-secondary">Belum ada ulasan untuk produk ini</p>
                     </div>
@@ -280,26 +281,26 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
-.star-rating {
-  direction: rtl;
-  font-size: 1rem;
-  display: inline-flex;
-}
+    .star-rating {
+        direction: rtl;
+        font-size: 1rem;
+        display: inline-flex;
+    }
 
-.star-rating input[type="radio"] {
-  display: none;
-}
+    .star-rating input[type="radio"] {
+        display: none;
+    }
 
-.star-rating label {
-  color: #ccc;
-  cursor: pointer;
-}
+    .star-rating label {
+        color: #ccc;
+        cursor: pointer;
+    }
 
-.star-rating input[type="radio"]:checked ~ label,
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-  color: #ffc107;
-}
+    .star-rating input[type="radio"]:checked~label,
+    .star-rating label:hover,
+    .star-rating label:hover~label {
+        color: #ffc107;
+    }
 </style>
 
 @endsection

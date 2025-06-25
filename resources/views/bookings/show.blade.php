@@ -1,229 +1,224 @@
-@extends('layouts2.app')
+@extends('layouts1.app')
 
 @section('content')
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Detail Booking #{{ $booking->slug }}</h1>
+<section class="bg-darkGrey relative py-[70px]">
+    <div class="container">
+        <header class="mb-[30px]">
+            <h2 class="font-bold text-dark text-[26px] mb-1">
+                Checkout & Drive Faster
+            </h2>
+            <p class="text-base text-secondary">We will help you get ready today</p>
+        </header>
 
-        <div>
-            @if($booking->status == 'Pending')
-                <a href="{{ route('bookings.edit', $booking->slug) }}" class="btn btn-warning">Edit</a>
-            @endif
-
-            {{-- @if(auth()->user()->is_admin) --}}
-                @if($booking->status == 'Pending')
-                    <form action="{{ route('bookings.confirm', $booking->slug) }}" method="POST" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-success">Konfirmasi</button>
-                    </form>
-                @elseif($booking->status == 'Confirmed' && $booking->is_paid)
-                    <form action="{{ route('bookings.markAsOnRent', $booking->slug) }}" method="POST" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-info">Mulai Sewa</button>
-                    </form>
-                @elseif($booking->status == 'On Rent')
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#completeModal">Selesaikan</button>
-                @endif
-            {{-- @endif --}}
-
-            @if(in_array($booking->status, ['Pending', 'Confirmed']))
-                <form action="{{ route('bookings.cancel', $booking->slug) }}" method="POST" class="d-inline">
-                    @csrf
-                    <button type="submit" class="btn btn-danger">Batalkan</button>
-                </form>
-            @endif
-        </div>
-    </div>
-
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">Informasi Penyewa</div>
-                <div class="card-body">
-                    <table class="table table-borderless">
-                        <tr>
-                            <th width="30%">Nama</th>
-                            <td>{{ $booking->name }}</td>
-                        </tr>
-                        <tr>
-                            <th>Alamat</th>
-                            <td>{{ $booking->address }}</td>
-                        </tr>
-                        <tr>
-                            <th>Kota</th>
-                            <td>{{ $booking->city }}</td>
-                        </tr>
-                        <tr>
-                            <th>Kode Pos</th>
-                            <td>{{ $booking->zip ?? '-' }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">Detail Pembayaran</div>
-                <div class="card-body">
-                    @if($booking->payment)
-                        <table class="table table-borderless">
-                            <tr>
-                                <th width="40%">Metode Pembayaran</th>
-                                <td>{{ $booking->payment->method }}</td>
-                            </tr>
-                            <tr>
-                                <th>Status Pembayaran</th>
-                                <td>
-                                    <span class="badge bg-{{ $booking->payment->status == 'Paid' ? 'success' : 'warning' }}">
-                                        {{ $booking->payment->status }}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Total Dibayar</th>
-                                <td>Rp {{ number_format($booking->payment->amount, 0, ',', '.') }}</td>
-                            </tr>
-                            @if($booking->payment->payment_date)
-                                <tr>
-                                    <th>Tanggal Pembayaran</th>
-                                    <td>{{ $booking->payment->payment_date->format('d M Y H:i') }}</td>
-                                </tr>
-                            @endif
-                        </table>
-                    @else
-                        <p>Belum ada informasi pembayaran.</p>
-                        @if($booking->status == 'Pending' || $booking->status == 'Confirmed')
-                            <a href="{{ route('bookings.payment', $booking->slug) }}" class="btn btn-primary">Bayar Sekarang</a>
-                        @endif
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">Detail Penyewaan</div>
-                <div class="card-body">
-                    <table class="table table-borderless">
-                        <tr>
-                            <th width="40%">Item</th>
-                            <td>{{ $booking->item->name }}</td>
-                        </tr>
-                        <tr>
-                            <th>Tanggal Mulai</th>
-                            <td>{{ $booking->start_date->format('d M Y') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Tanggal Selesai</th>
-                            <td>{{ $booking->end_date->format('d M Y') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Durasi</th>
-                            <td>{{ $booking->duration_days }} hari</td>
-                        </tr>
-                        <tr>
-                            <th>Daerah Sewa</th>
-                            <td>
+        <div class="flex items-center gap-5 lg:justify-between">
+            <!-- Form Card -->
+            <form action="" class="bg-white p-[30px] pb-10 rounded-3xl max-w-[490px] w-full">
+                <div class="flex flex-col gap-[30px]">
+                    <div class="flex flex-col gap-4">
+                        <h5 class="text-lg font-semibold">
+                            Review Order
+                        </h5>
+                        <!-- Items -->
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal">
+                                Nama Penyewa
+                            </p>
+                            <p class="text-base font-semibold" style="color: red">
+                                {{ $booking->name}}
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal">
+                                Mobil
+                            </p>
+                            <p class="text-base font-semibold">
+                                {{ $booking->item->brand->name }} {{ $booking->item->name }}
+                            </p>
+                        </div>
+                        <!-- Items -->
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal">
+                                Durasi
+                            </p>
+                            <p class="text-base font-semibold">
+                                {{ $booking->duration_days }} hari
+                            </p>
+                        </div>
+                        <!-- Items -->
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal">
+                                Tanggal
+                            </p>
+                            <p class="text-base font-semibold">
+                                {{ $booking->start_date->format('d M Y') }} - {{ $booking->end_date->format('d M Y') }}
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal">
+                                Daerah Sewa
+                            </p>
+                            <p class="text-base font-semibold">
                                 @if($booking->region == 'Jateng') Jawa Tengah
                                 @elseif($booking->region == 'DIY') DIY
                                 @else Luar Provinsi
                                 @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Driver</th>
-                            <td>{{ $booking->driver_option }}</td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td>
-                                <span class="badge
-                                    @if($booking->status == 'Pending') bg-warning text-dark
-                                    @elseif($booking->status == 'Confirmed') bg-primary
-                                    @elseif($booking->status == 'On Rent') bg-info
-                                    @elseif($booking->status == 'Completed') bg-success
-                                    @elseif($booking->status == 'Cancelled') bg-danger
-                                    @endif">
-                                    {{ $booking->status }}
-                                </span>
-                            </td>
-                        </tr>
-                        @if($booking->notes)
-                            <tr>
-                                <th>Catatan</th>
-                                <td>{{ $booking->notes }}</td>
-                            </tr>
-                        @endif
-                    </table>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">Rincian Harga</div>
-                <div class="card-body">
-                    <table class="table table-borderless">
-                        <tr>
-                            <th width="60%">Harga Dasar ({{ $booking->duration_days }} hari)</th>
-                            <td class="text-end">Rp {{ number_format($booking->base_price, 0, ',', '.') }}</td>
-                        </tr>
-                        @if($booking->driver_fee > 0)
-                            <tr>
-                                <th>Biaya Driver ({{ $booking->duration_days }} hari)</th>
-                                <td class="text-end">Rp {{ number_format($booking->driver_fee, 0, ',', '.') }}</td>
-                            </tr>
-                        @endif
-                        @if($booking->out_of_region_fee > 0)
-                            <tr>
-                                <th>Biaya Luar Provinsi</th>
-                                <td class="text-end">Rp {{ number_format($booking->out_of_region_fee, 0, ',', '.') }}</td>
-                            </tr>
-                        @endif
-                        @if($booking->overtime_fee > 0)
-                            <tr>
-                                <th>Biaya Overtime</th>
-                                <td class="text-end">Rp {{ number_format($booking->overtime_fee, 0, ',', '.') }}</td>
-                            </tr>
-                        @endif
-                        <tr class="fw-bold">
-                            <th>Total Harga</th>
-                            <td class="text-end">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @if($booking->status == 'On Rent')
-        <!-- Complete Booking Modal -->
-        <div class="modal fade" id="completeModal" tabindex="-1" aria-labelledby="completeModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="{{ route('bookings.markAsCompleted', $booking->slug) }}" method="POST">
-                        @csrf
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="completeModalLabel">Selesaikan Penyewaan</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </p>
                         </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="actual_end_date" class="form-label">Tanggal Pengembalian Aktual</label>
-                                <input type="datetime-local" class="form-control" id="actual_end_date" name="actual_end_date" required>
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal">
+                                Driver
+                            </p>
+                            <p class="text-base font-semibold">
+                                {{ $booking->driver_option }}
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-semibold">
+                                Status Booking
+                            </p>
+                            <p class="text-base font-semibold" style="@if($booking->status == 'Pending') color: orange; @elseif($booking->status == 'Confirmed') color: blue;
+                                    @elseif($booking->status == 'On Rent') color: teal; @elseif($booking->status == 'Completed') color: green;
+                                    @elseif($booking->status == 'Cancelled') color: red; @endif">
+                                {{ $booking->status }}
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-semibold">
+                                Status Pembayaran
+                            </p>
+                            @if($booking->status == 'Confirmed' || $booking->status == 'On Rent' || $booking->status ==
+                            'Completed')
+                            <p class="text-base font-semibold" style="@if(optional($booking->payment)->status == 'Paid') color: green;
+                                        @else color: orange;
+                                        @endif">
+                                {{ optional($booking->payment)->status ?? '-' }}
+                            </p>
+                            @else
+                            <p class="text-base font-semibold text-gray-400">-</p>
+                            @endif
+                        </div>
+                        <hr>
+                        <!-- Items -->
+                        <!-- Price -->
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal">
+                                Harga Dasar ({{ $booking->duration_days }} hari)
+                            </p>
+                            <p class="text-base font-semibold">
+                                Rp {{ number_format($booking->base_price, 0, ',', '.') }}
+                            </p>
+                        </div>
+
+                        <!-- Driver Fee -->
+                        @if($booking->driver_fee > 0)
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal">
+                                Biaya Driver ({{ $booking->duration_days }} hari)
+                            </p>
+                            <p class="text-base font-semibold">
+                                Rp {{ number_format($booking->driver_fee, 0, ',', '.') }}
+                            </p>
+                        </div>
+                        @endif
+
+                        <!-- Out of Region Fee -->
+                        @if($booking->out_of_region_fee > 0)
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal">
+                                Biaya Luar Provinsi
+                            </p>
+                            <p class="text-base font-semibold">
+                                Rp {{ number_format($booking->out_of_region_fee, 0, ',', '.') }}
+                            </p>
+                        </div>
+                        @endif
+
+                        <!-- Overtime Fee -->
+                        @if($booking->overtime_fee > 0)
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-normal" style="color: red">
+                                Biaya Overtime
+                            </p>
+                            <p class="text-base font-semibold" style="color: red">
+                                Rp {{ number_format($booking->overtime_fee, 0, ',', '.') }}
+                            </p>
+                        </div>
+                        @endif
+
+                        <!-- Total -->
+                        <div class="flex items-center justify-between font-bold mt-2 border-t pt-2">
+                            <p class="text-base">
+                                Total Harga
+                            </p>
+                            <p class="text-base">
+                                Rp {{ number_format($booking->total_price, 0, ',', '.') }}
+                            </p>
+                        </div>
+
+                    </div>
+                    {{-- <div class="flex flex-col gap-4">
+                        <h5 class="text-lg font-semibold">
+                            Payment Method
+                        </h5>
+                        <div class="grid md:grid-cols-2 gap-4 md:gap-[30px] items-center">
+                            <div class="relative boxPayment">
+                                <input type="radio" value="mastercard" name="paymentMethod" id="mastercard"
+                                    class="absolute inset-0 z-50 opacity-0 cursor-pointer">
+                                <label for="mastercard"
+                                    class="flex items-center justify-center gap-4 border border-grey rounded-[20px] p-5 min-h-[80px]">
+                                    <img src="{{ asset('sewa/public/assets/svgs/cash-icon.svg') }}" alt=""
+                                        width="50px;">
+                                    <p class="text-base font-semibold">
+                                        Cash
+                                    </p>
+                                </label>
+                            </div>
+                            <div class="relative boxPayment">
+                                <input type="radio" value="midtrans" name="paymentMethod" id="midtrans"
+                                    class="absolute inset-0 z-50 opacity-0 cursor-pointer">
+                                <label for="midtrans"
+                                    class="flex items-center justify-center gap-4 border border-grey rounded-[20px] p-5 min-h-[80px]">
+                                    <img src="{{ asset('sewa/public/assets/svgs/logo-midtrans.svg') }}" alt="">
+                                    <p class="text-base font-semibold">
+                                        Midtrans
+                                    </p>
+                                </label>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Selesaikan</button>
+                    </div> --}}
+                    <!-- CTA Button -->
+                    <div class="col-span-2 mt-5">
+                        @if($booking->payment && $booking->payment->status == 'Paid')
+                        <div class="p-4 bg-green-100 text-green-800 text-sm rounded-lg border border-green-300">
+                            <p class="font-semibold" style="color: green">
+                                Telah dibayar pada tanggal
+                                {{ $booking->payment->payment_date ? $booking->payment->payment_date->format('d M Y
+                                H:i') : '-' }}
+                            </p>
+                            <p class="font-semibold">
+                                Metode Pembayaran :
+                                {{ $booking->payment->method }}
+                            </p>
                         </div>
-                    </form>
+                        @else
+                        <!-- Button Primary -->
+                        <div class="p-1 rounded-full bg-primary group">
+                            <a href="{{ route('bookings.payment', $booking->slug) }}" class="btn-primary">
+                                <p>
+                                    Continue
+                                </p>
+                                <img src="{{ asset('sewa/public/assets/svgs/ic-arrow-right.svg') }}" alt="">
+                            </a>
+                        </div>
+                        @endif
+                    </div>
+
                 </div>
-            </div>
+            </form>
+            <img src="{{ asset('sewa/public/assets/images/porsche_small.webp') }}"
+                class="max-w-[50%] hidden lg:block -mr-[100px]" alt="">
         </div>
-    @endif
-</div>
+    </div>
+</section>
 @endsection

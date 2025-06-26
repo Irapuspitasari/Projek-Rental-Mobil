@@ -64,7 +64,29 @@
                         </div>
                     </div>
 
-                    <!-- METODE PEMBAYARAN -->
+                    <!-- KONDISI SUDAH TERBAYAR -->
+                    @if($booking->payment && $booking->payment->status == 'Paid')
+                    <div
+                        class="w-full p-4 bg-green-100 text-green-800 text-sm rounded-xl border border-green-300 text-center">
+                        <p class="font-semibold">
+                            Telah dibayar pada tanggal
+                            {{ $booking->payment->payment_date ? $booking->payment->payment_date->format('d M Y H:i') :
+                            '-' }}
+                        </p>
+                    </div>
+                    @else
+                    <!-- KONDISI PEMBAYARAN TERTUNDA -->
+                    @if($booking->payment && $booking->payment->status === 'Pending' && $booking->payment->method ===
+                    'Transfer')
+                    <div class="p-4 bg-yellow-100 border border-yellow-400 text-yellow-800 rounded-lg text-sm">
+                        <p class="mb-2">Anda memiliki pembayaran transfer yang belum diselesaikan.</p>
+                        <a href="{{ $booking->payment->payment_url }}"
+                            class="inline-block px-4 py-2 bg-primary text-white rounded-lg font-semibold">
+                            Lanjutkan Pembayaran
+                        </a>
+                    </div>
+                    @else
+                    <!-- FORM PEMBAYARAN -->
                     <div class="flex flex-col gap-4">
                         <h5 class="text-lg font-semibold">Metode Pembayaran</h5>
                         <div class="grid md:grid-cols-2 gap-4 md:gap-[30px] items-center">
@@ -91,41 +113,21 @@
                         </div>
                     </div>
 
-                    <!-- KONDISI PEMBAYARAN TERTUNDA -->
-                    @if($booking->payment && $booking->payment->status === 'Pending' && $booking->payment->method ===
-                    'Transfer')
-                    <div class="p-4 bg-yellow-100 border border-yellow-400 text-yellow-800 rounded-lg text-sm">
-                        <p class="mb-2">Anda memiliki pembayaran transfer yang belum diselesaikan.</p>
-                        <a href="{{ $booking->payment->payment_url }}"
-                            class="inline-block px-4 py-2 bg-primary text-white rounded-lg font-semibold">
-                            Lanjutkan Pembayaran
-                        </a>
-                    </div>
-                    @endif
+                    <!-- Input jumlah pembayaran (hidden) -->
+                    <input type="hidden" name="amount" value="{{ $booking->total_price }}">
 
-                    <!-- CTA BUTTONS -->
-                    <div class="col-span-6 mt-[26px]">
-                        @if($booking->payment && $booking->payment->status == 'Paid')
-                        <div
-                            class="w-full p-4 bg-green-100 text-green-800 text-sm rounded-xl border border-green-300 text-center">
-                            <p class="font-semibold">
-                                Telah dibayar pada tanggal
-                                {{ $booking->payment->payment_date ? $booking->payment->payment_date->format('d M Y
-                                H:i') : '-' }}
-                            </p>
-                        </div>
-                        @else
-                        <button type="submit" class="btn-primary">
+                    <!-- Tombol Aksi -->
+                    <div class="flex flex-col gap-4 mt-6">
+                        <button type="submit" class="btn-primary w-full py-3">
                             Proses Pembayaran
                         </button>
-                        @endif
                     </div>
-                    <div class="p-1 rounded-full bg-primary group">
-                        <a href="{{ route('bookings.show', $booking->slug) }}" class="btn-primary">
-                            <p>
-                                Kembali
-                            </p>
-                            <img src="{{ asset('sewa/public/assets/svgs/ic-arrow-right.svg') }}" alt="">
+                    @endif
+                    @endif
+                    <div class="flex flex-col gap-4">
+                        <a href="{{ route('bookings.show', $booking->slug) }}"
+                            class="btn-secondary w-full py-3 text-center">
+                            Kembali
                         </a>
                     </div>
                 </div>

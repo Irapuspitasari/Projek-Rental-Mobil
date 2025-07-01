@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('photos')->nullable();
             $table->text('features')->nullable();
             $table->integer('price')->default(0);
+            $table->boolean('available')->default(true);
             $table->timestamps();
         });
     }

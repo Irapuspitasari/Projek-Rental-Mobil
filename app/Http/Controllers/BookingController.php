@@ -36,12 +36,12 @@ class BookingController extends Controller
 
         // Jika ada item_slug, langsung ambil item tersebut
         if ($item_slug) {
-            $item = Item::where('slug', $item_slug)->firstOrFail();
+            $item = Item::where('slug', $item_slug)
+                ->where('available', true)
+                ->firstOrFail();
             return view('bookings.create', compact('item'));
         }
-
-        // Jika tidak ada item_slug, tampilkan semua item (untuk case lain)
-        $items = Item::all();
+        $items = Item::where('available', true)->get();
         return view('bookings.create', compact('items'));
     }
 
@@ -527,5 +527,43 @@ class BookingController extends Controller
 
         return redirect()->route('bookings.show', $booking->slug)
             ->with('warning', 'Pembayaran sedang diproses');
+    }
+    public function search(Request $request)
+    {
+        if (!$request->hasAny(['search_term', 'start_date'])) {
+            return view('bookings.search', ['booking' => null]);
+        }
+        $validator = Validator::make($request->all(), [
+            'search_term' => 'required|string',
+            'start_date' => 'nullable|date',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->route('bookings.search')
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $isSlugSearch = preg_match('/^[a-z0-9-]+$/', $request->search_term);
+        if (!$isSlugSearch && !$request->filled('start_date')) {
+            return redirect()->route('bookings.search')
+                ->withErrors(['start_date' => 'Tanggal mulai wajib diisi ketika mencari berdasarkan nama penyewa'])
+                ->withInput();
+        }
+        $query = Booking::with(['item', 'payment'])
+            ->orderBy('start_date', 'desc');
+        if ($isSlugSearch) {
+            $query->where('slug', 'like', '%' . $request->search_term . '%');
+        } else {
+            $query->where('name', 'like', '%' . $request->search_term . '%');
+            if ($request->filled('start_date')) {
+                $query->whereDate('start_date', $request->start_date);
+            }
+        }
+        $booking = $query->first();
+        return view('bookings.search', [
+            'booking' => $booking,
+            'search_term' => $request->search_term,
+            'start_date' => $request->start_date,
+            'is_slug_search' => $isSlugSearch
+        ]);
     }
 }

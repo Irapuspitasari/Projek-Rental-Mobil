@@ -55,6 +55,7 @@ Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
     ->middleware('auth');
 
 Route::resource('users', UserController::class);
+Route::get('/bookings/search', [BookingController::class, 'search'])->name('bookings.search');
 Route::prefix('bookings')->group(function () {
     Route::get('/', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/create', [BookingController::class, 'create'])->name('bookings.create');

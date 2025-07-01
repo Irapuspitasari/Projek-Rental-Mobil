@@ -22,9 +22,9 @@
         <div class="hidden w-full lg:block" id="navigation">
             <div class="flex flex-col items-baseline gap-4 mt-6 lg:justify-between lg:flex-row lg:items-center lg:mt-0">
                 <div class="flex flex-col w-full ml-auto lg:w-auto gap-4 lg:gap-[50px] lg:items-center lg:flex-row">
-                    <a href="/" class="nav-link-item active">Landing</a>
+                    <a href="/" class="nav-link-item active">Home</a>
                     <a href="/car" class="nav-link-item">Catalog</a>
-                    <a href="#!" class="nav-link-item">Benefits</a>
+                    <a href="/bookings/search" class="nav-link-item">Cek Booking</a>
                     <a href="#!" class="nav-link-item">Stories</a>
                     <a href="#!" class="nav-link-item">Maps</a>
                 </div>

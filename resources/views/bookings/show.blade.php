@@ -75,6 +75,14 @@
                         <hr>
                         <div class="flex items-center justify-between">
                             <p class="text-base font-semibold">
+                                Kode Booking
+                            </p>
+                            <p class="text-base font-semibold">
+                                {{ $booking->slug }}
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <p class="text-base font-semibold">
                                 Status Booking
                             </p>
                             <p class="text-base font-semibold" style="@if($booking->status == 'Pending') color: orange; @elseif($booking->status == 'Confirmed') color: blue;

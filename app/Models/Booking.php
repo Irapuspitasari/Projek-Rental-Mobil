@@ -163,4 +163,32 @@ public function calculateOvertime()
 
         return false; // Failed to update status
     }
+    protected static function booted()
+    {
+        static::saved(function ($booking) {
+            $booking->updateItemAvailability();
+        });
+
+        static::deleted(function ($booking) {
+            $booking->item->updateAvailability();
+        });
+    }
+
+    public function updateItemAvailability()
+    {
+        $item = $this->item;
+
+        if (in_array($this->status, ['Confirmed', 'On Rent'])) {
+            $item->available = false;
+            $item->save();
+        } else {
+            $hasActiveBooking = $item->bookings()
+                ->whereIn('status', ['Confirmed', 'On Rent'])
+                ->where('id', '!=', $this->id)
+                ->exists();
+
+            $item->available = !$hasActiveBooking;
+            $item->save();
+        }
+    }
 }

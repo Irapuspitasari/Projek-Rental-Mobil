@@ -21,14 +21,19 @@ class CarController extends Controller
     }
     public function car()
     {
-        // Get popular items with their type, brand, and reviews
-        $popularItems = Item::with(['type', 'brand', 'reviews'])
+        $availableItems = Item::with(['type', 'brand', 'reviews'])
             ->withAvg('reviews', 'star')
             ->withCount('reviews')
+            ->where('available', true)
             ->orderBy('reviews_avg_star', 'desc')
-            // ->take(100)
+            ->get();
+        $unavailableItems = Item::with(['type', 'brand', 'reviews'])
+            ->withAvg('reviews', 'star')
+            ->withCount('reviews')
+            ->where('available', false)
+            ->orderBy('reviews_avg_star', 'desc')
             ->get();
 
-        return view('car', compact('popularItems'));
+        return view('car', compact('availableItems', 'unavailableItems'));
     }
 }

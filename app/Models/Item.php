@@ -17,6 +17,7 @@ class Item extends Model
         'photos',
         'features',
         'price',
+        'available',
     ];
 
     public function brand(): BelongsTo
@@ -50,5 +51,13 @@ class Item extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+    public function updateAvailability()
+    {
+        $this->available = !$this->bookings()
+            ->whereIn('status', ['Confirmed', 'On Rent'])
+            ->exists();
+
+        $this->save();
     }
 }

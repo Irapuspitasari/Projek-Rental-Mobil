@@ -44,9 +44,13 @@ class Item extends Model
     {
         return $this->reviews()->count();
     }
-    public function hasUserReview($userId)
+    public function hasReviewFromUser($userId)
     {
         return $this->reviews()->where('user_id', $userId)->exists();
+    }
+    public function hasReviewForBooking($bookingId)
+    {
+        return $this->reviews()->where('booking_id', $bookingId)->exists();
     }
     public function bookings()
     {

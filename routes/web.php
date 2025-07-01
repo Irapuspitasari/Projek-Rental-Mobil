@@ -6,6 +6,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
@@ -42,17 +43,16 @@ Route::resource('brands', BrandController::class);
 Route::resource('types', TypeController::class);
 Route::resource('items', ItemController::class);
 Route::get('/items/{slug}', [ItemController::class, 'show'])->name('items.show');
-Route::post('/items/{item}/reviews', [ReviewController::class, 'store'])
-    ->name('items.reviews.store')
-    ->middleware('auth');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/items/{item}/reviews', [ReviewController::class, 'store'])
+        ->name('reviews.store');
 
-Route::put('/reviews/{review}', [ReviewController::class, 'update'])
-    ->name('reviews.update')
-    ->middleware('auth');
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])
+        ->name('reviews.update');
 
-Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
-    ->name('reviews.destroy')
-    ->middleware('auth');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
+        ->name('reviews.destroy');
+});
 
 Route::resource('users', UserController::class);
 Route::get('/bookings/search', [BookingController::class, 'search'])->name('bookings.search');
@@ -80,4 +80,8 @@ Route::prefix('bookings')->group(function () {
         ->name('payment.notification');
     Route::get('/payment/return', [BookingController::class, 'paymentReturn'])
         ->name('payment.return');
+});
+Route::prefix('reports')->group(function () {
+    Route::get('/bookings', [ReportController::class, 'index'])->name('reports.bookings');
+    Route::get('/bookings/export', [ReportController::class, 'export'])->name('reports.export');
 });

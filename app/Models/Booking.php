@@ -97,29 +97,29 @@ class Booking extends Model
     }
 
     // Business Logic Methods
-public function calculateOvertime()
-{
-    if (!$this->end_date || !$this->actual_end_date) {
-        return null;
+    public function calculateOvertime()
+    {
+        if (!$this->end_date || !$this->actual_end_date) {
+            return null;
+        }
+
+        // Hitung selisih waktu antara actual end date dan end date yang dijadwalkan
+        $overtimeHours = $this->actual_end_date->diffInHours($this->end_date);
+
+        // Jika actual end date lebih awal dari end date, tidak ada overtime
+        if ($this->actual_end_date <= $this->end_date) {
+            return null;
+        }
+
+        $feePerHour = 20000; // Rp 20.000/jam
+        $totalFee = $overtimeHours * $feePerHour;
+
+        return [
+            'hours' => $overtimeHours,
+            'fee_per_hour' => $feePerHour,
+            'total_fee' => $totalFee
+        ];
     }
-
-    // Hitung selisih waktu antara actual end date dan end date yang dijadwalkan
-    $overtimeHours = $this->actual_end_date->diffInHours($this->end_date);
-
-    // Jika actual end date lebih awal dari end date, tidak ada overtime
-    if ($this->actual_end_date <= $this->end_date) {
-        return null;
-    }
-
-    $feePerHour = 20000; // Rp 20.000/jam
-    $totalFee = $overtimeHours * $feePerHour;
-
-    return [
-        'hours' => $overtimeHours,
-        'fee_per_hour' => $feePerHour,
-        'total_fee' => $totalFee
-    ];
-}
 
     public function markAsCompleted($actualEndDate = null)
     {
@@ -190,5 +190,13 @@ public function calculateOvertime()
             $item->available = !$hasActiveBooking;
             $item->save();
         }
+    }
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
+    public function canBeReviewed(): bool
+    {
+        return $this->status === 'Completed' && !$this->review()->exists();
     }
 }

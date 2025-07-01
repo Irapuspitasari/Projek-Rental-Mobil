@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Type;
 use App\Models\Brand;
-use Illuminate\Http\Request;
+use App\Models\Booking;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
@@ -58,17 +59,42 @@ class ItemController extends Controller
 
         return redirect()->route('items.index')->with('success', 'Item berhasil ditambahkan.');
     }
+    // public function show($slug)
+    // {
+    //     $item = Item::with(['type', 'brand', 'reviews.user'])
+    //         ->where('slug', $slug)
+    //         ->firstOrFail();
+
+    //     // Calculate average rating
+    //     $averageRating = $item->reviews->avg('star') ?? 0;
+    //     $totalReviews = $item->reviews->count();
+
+    //     return view('items.show', compact('item', 'averageRating', 'totalReviews'));
+    // }
     public function show($slug)
     {
-        $item = Item::with(['type', 'brand', 'reviews.user'])
+        $item = Item::with(['type', 'brand', 'reviews.user', 'bookings'])
             ->where('slug', $slug)
             ->firstOrFail();
-
-        // Calculate average rating
         $averageRating = $item->reviews->avg('star') ?? 0;
         $totalReviews = $item->reviews->count();
-
-        return view('items.show', compact('item', 'averageRating', 'totalReviews'));
+        $userCompletedBookings = collect([]);
+        $userHasReview = false;
+        if (auth()->check()) {
+            $userCompletedBookings = Booking::where('user_id', auth()->id())
+                ->where('item_id', $item->id)
+                ->where('status', 'Completed')
+                ->whereDoesntHave('review')
+                ->get();
+            $userHasReview = $item->reviews->where('user_id', auth()->id())->isNotEmpty();
+        }
+        return view('items.show', [
+            'item' => $item,
+            'averageRating' => $averageRating,
+            'totalReviews' => $totalReviews,
+            'userCompletedBookings' => $userCompletedBookings,
+            'userHasReview' => $userHasReview
+        ]);
     }
     public function edit($id)
     {

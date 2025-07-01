@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            $table->foreignId('booking_id')->unique()->constrained()->onDelete('cascade');
             $table->tinyInteger('star')->unsigned()->between(1, 5);
             $table->text('comment')->nullable();
             $table->timestamps();
-
-            $table->unique(['user_id', 'item_id']);
         });
     }
 

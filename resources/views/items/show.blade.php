@@ -5,12 +5,10 @@
     <div class="container">
         <!-- Breadcrumb -->
         <ul class="flex items-center gap-5 mb-[50px]">
-            <li
-                class="text-secondary font-normal text-base capitalize after:content-['/'] last:after:content-none inline-flex gap-5">
+            <li class="text-secondary font-normal text-base capitalize after:content-['/'] last:after:content-none inline-flex gap-5">
                 <a href="/">Home</a>
             </li>
-            <li
-                class="text-dark font-semibold text-base capitalize after:content-['/'] last:after:content-none inline-flex gap-5">
+            <li class="text-dark font-semibold text-base capitalize after:content-['/'] last:after:content-none inline-flex gap-5">
                 Details
             </li>
         </ul>
@@ -45,17 +43,15 @@
                             <p class="text-secondary font-normal text-base mb-[10px]">{{ $item->type->name }}</p>
                             <div class="flex items-center gap-2">
                                 <span class="flex items-center gap-1">
-                                    @for($i = 1; $i <= 5; $i++) @if($i <=floor($averageRating)) <img
-                                        src="{{ asset('sewa/public/assets/svgs/ic-star.svg') }}"
-                                        class="h-[22px] w-[22px]" alt="star">
-                                        @elseif($i - 0.5 <= $averageRating && $averageRating < $i) <img
-                                            src="{{ asset('sewa/public/assets/ss.png') }}" class="h-[22px] w-[22px]"
-                                            alt="half star">
-                                            @else
-                                            <img src="{{ asset('sewa/public/assets/ss.png') }}"
-                                                class="h-[22px] w-[22px]" alt="empty star">
-                                            @endif
-                                            @endfor
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= floor($averageRating))
+                                            <img src="{{ asset('sewa/public/assets/svgs/ic-star.svg') }}" class="h-[22px] w-[22px]" alt="star">
+                                        @elseif($i - 0.5 <= $averageRating && $averageRating < $i)
+                                            <img src="{{ asset('sewa/public/assets/ss.png') }}" class="h-[22px] w-[22px]" alt="half star">
+                                        @else
+                                            <img src="{{ asset('sewa/public/assets/ss.png') }}" class="h-[22px] w-[22px]" alt="empty star">
+                                        @endif
+                                    @endfor
                                 </span>
                                 <p class="text-base font-semibold text-dark mt-[2px]">
                                     {{ number_format($averageRating, 1) }}/5 ({{ $totalReviews }})
@@ -66,13 +62,12 @@
                         <!-- Features -->
                         <ul class="flex flex-col gap-4 flex-start pt-5 pb-[25px]">
                             @foreach(explode("\n", $item->features) as $feature)
-                            @if(trim($feature))
-                            <li class="flex items-center gap-3 text-base font-semibold text-dark">
-                                <img src="{{ asset('sewa/public/assets/svgs/ic-checkDark.svg') }}" alt=""
-                                    class="flex-shrink-0">
-                                {{ trim($feature) }}
-                            </li>
-                            @endif
+                                @if(trim($feature))
+                                <li class="flex items-center gap-3 text-base font-semibold text-dark">
+                                    <img src="{{ asset('sewa/public/assets/svgs/ic-checkDark.svg') }}" alt="" class="flex-shrink-0">
+                                    {{ trim($feature) }}
+                                </li>
+                                @endif
                             @endforeach
                         </ul>
 
@@ -88,11 +83,9 @@
                             </div>
                             <div class="w-full max-w-[70%]">
                                 <div class="p-1 rounded-full bg-primary group">
-                                    <a href="{{ route('bookings.create', ['item_slug' => $item->slug]) }}"
-                                        class="btn-primary">
+                                    <a href="{{ route('bookings.create', ['item_slug' => $item->slug]) }}" class="btn-primary">
                                         <p>Rent Now</p>
-                                        <img src="{{ asset('sewa/public/assets/svgs/ic-arrow-right.svg') }}"
-                                            alt="Rent Now">
+                                        <img src="{{ asset('sewa/public/assets/svgs/ic-arrow-right.svg') }}" alt="Rent Now">
                                     </a>
                                 </div>
                             </div>
@@ -111,15 +104,15 @@
                         <h2 class="text-2xl font-bold text-dark">Ulasan Produk</h2>
                         <div class="flex items-center gap-3">
                             <div class="flex items-center gap-1">
-                                @for($i = 1; $i <= 5; $i++) @if($i <=floor($averageRating)) <img
-                                    src="{{ asset('sewa/public/assets/svgs/ic-star.svg') }}" class="h-6 w-6" alt="star">
-                                    @elseif($i - 0.5 <= $averageRating && $averageRating < $i) <img
-                                        src="{{ asset('sewa/public/assets/ss.png') }}" class="h-6 w-6" alt="half star">
-                                        @else
-                                        <img src="{{ asset('sewa/public/assets/ss.png') }}" class="h-6 w-6"
-                                            alt="empty star">
-                                        @endif
-                                        @endfor
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= floor($averageRating))
+                                        <img src="{{ asset('sewa/public/assets/svgs/ic-star.svg') }}" class="h-6 w-6" alt="star">
+                                    @elseif($i - 0.5 <= $averageRating && $averageRating < $i)
+                                        <img src="{{ asset('sewa/public/assets/ss.png') }}" class="h-6 w-6" alt="half star">
+                                    @else
+                                        <img src="{{ asset('sewa/public/assets/ss.png') }}" class="h-6 w-6" alt="empty star">
+                                    @endif
+                                @endfor
                             </div>
                             <span class="text-base font-semibold text-dark">
                                 {{ number_format($averageRating, 1) }}/5 ({{ $totalReviews }} ulasan)
@@ -128,26 +121,25 @@
                     </div>
                     <hr class="my-4">
 
-                    @forelse($item->reviews()->latest()->get() as $review)
-                    <div class="py-4 border-b border-grey last:border-0">
+                    @forelse($item->reviews()->with(['user', 'booking'])->latest()->get() as $review)
+                    <div class="py-4 border-b border-grey last:border-0" id="{{ $review->user_id == auth()->id() ? 'user-review' : '' }}">
                         <div class="flex justify-between items-start mb-3">
                             <div>
                                 <h4 class="font-bold text-dark">{{ $review->user->name }}</h4>
+                                <p class="text-sm text-secondary">Booking #{{ $review->booking->id }}</p>
                                 <div class="flex items-center gap-1 mt-1">
-                                    @for($i = 1; $i <= 5; $i++) @if($i <=floor($review->star))
-                                        <img src="{{ asset('sewa/public/assets/svgs/ic-star.svg') }}" class="h-4 w-4"
-                                            alt="star">
-                                        @elseif($i - 0.5 <= $review->star && $review->star < $i) <img
-                                                src="{{ asset('sewa/public/assets/ss.png') }}" class="h-4 w-4"
-                                                alt="half star">
-                                                @else
-                                                <img src="{{ asset('sewa/public/assets/ss.png') }}" class="h-4 w-4"
-                                                    alt="empty star">
-                                                @endif
-                                                @endfor
-                                                <span class="text-secondary text-sm ml-2">
-                                                    {{ $review->created_at->format('d M Y') }}
-                                                </span>
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= floor($review->star))
+                                            <img src="{{ asset('sewa/public/assets/svgs/ic-star.svg') }}" class="h-4 w-4" alt="star">
+                                        @elseif($i - 0.5 <= $review->star && $review->star < $i)
+                                            <img src="{{ asset('sewa/public/assets/ss.png') }}" class="h-4 w-4" alt="half star">
+                                        @else
+                                            <img src="{{ asset('sewa/public/assets/ss.png') }}" class="h-4 w-4" alt="empty star">
+                                        @endif
+                                    @endfor
+                                    <span class="text-secondary text-sm ml-2">
+                                        {{ $review->created_at->format('d M Y') }}
+                                    </span>
                                 </div>
                             </div>
                             @can('update', $review)
@@ -182,48 +174,61 @@
             <div class="col-span-12 lg:col-span-4">
                 @auth
                 <div class="bg-white p-5 rounded-3xl sticky top-6">
-                    @if(!$item->hasUserReview(auth()->id()))
-                    <h3 class="text-xl font-bold text-dark mb-4">Tulis Ulasan Anda</h3>
-                    <form action="{{ route('items.reviews.store', $item->id) }}" method="POST">
-                        @csrf
-                        <div class="mb-4">
-                            <label class="block text-dark font-medium mb-2">Rating</label>
-                            <div class="star-rating">
-                                @for($i = 5; $i >= 1; $i--)
-                                <input type="radio" id="fa-star{{ $i }}" name="star" value="{{ $i }}">
-                                <label for="fa-star{{ $i }}"><i class="fas fa-star"></i></label>
-                                @endfor
+                    @if($userCompletedBookings->count() > 0)
+                        <h3 class="text-xl font-bold text-dark mb-4">Tulis Ulasan Anda</h3>
+                        <form action="{{ route('reviews.store', $item) }}" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label class="block text-dark font-medium mb-2">Pilih Booking</label>
+                                <select name="booking_id" class="w-full p-3 border border-grey rounded-lg" required>
+                                    @foreach($userCompletedBookings as $booking)
+                                        <option value="{{ $booking->id }}">
+                                            Booking #{{ $booking->id }} -
+                                            {{ $booking->start_date->format('d M Y') }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-
-                            @error('star')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-dark font-medium mb-2">Komentar</label>
-                            <textarea name="comment" rows="3" class="w-full p-3 border border-grey rounded-lg"
-                                required>{{ old('comment') }}</textarea>
-                            @error('comment')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-                        </div>
-                        <button type="submit"
-                            class="bg-primary text-white py-3 px-6 rounded-full font-medium hover:bg-primary-dark transition">
-                            Kirim Ulasan
-                        </button>
-                    </form>
+                            <div class="mb-4">
+                                <label class="block text-dark font-medium mb-2">Rating</label>
+                                <div class="star-rating">
+                                    @for($i = 5; $i >= 1; $i--)
+                                    <input type="radio" id="fa-star{{ $i }}" name="star" value="{{ $i }}" {{ old('star') == $i ? 'checked' : '' }}>
+                                    <label for="fa-star{{ $i }}"><i class="fas fa-star"></i></label>
+                                    @endfor
+                                </div>
+                                @error('star')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-dark font-medium mb-2">Komentar</label>
+                                <textarea name="comment" rows="3" class="w-full p-3 border border-grey rounded-lg" required>{{ old('comment') }}</textarea>
+                                @error('comment')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            </div>
+                            <button type="submit" class="bg-primary text-white py-3 px-6 rounded-full font-medium hover:bg-primary-dark transition">
+                                Kirim Ulasan
+                            </button>
+                        </form>
                     @else
-                    <div class="text-center py-6">
-                        <img src="{{ asset('sewa/public/assets/svgs/ic-checkDark.svg') }}"
-                            class="h-12 w-12 mx-auto mb-4" alt="Reviewed">
-                        <p class="text-dark mb-4">Anda sudah memberikan ulasan untuk produk ini</p>
-                        <a href="#user-review" class="text-primary font-medium">Lihat ulasan saya</a>
-                    </div>
+                        <div class="text-center py-6">
+                            @if($userHasReview)
+                                <img src="{{ asset('sewa/public/assets/svgs/ic-checkDark.svg') }}" class="h-12 w-12 mx-auto mb-4" alt="Reviewed">
+                                <p class="text-dark mb-4">Anda sudah memberikan ulasan untuk produk ini</p>
+                                <a href="#user-review" class="text-primary font-medium">Lihat ulasan saya</a>
+                            @else
+                                <img src="{{ asset('sewa/public/assets/svgs/file-list-3-line.svg') }}" class="h-12 w-12 mx-auto mb-4" alt="No bookings">
+                                <p class="text-dark mb-4">Anda belum memiliki booking yang selesai untuk produk ini</p>
+                                <a href="{{ route('bookings.create', ['item_slug' => $item->slug]) }}" class="bg-primary text-white py-3 px-6 rounded-full font-medium inline-block hover:bg-primary-dark transition">
+                                    Buat Booking
+                                </a>
+                            @endif
+                        </div>
                     @endif
                 </div>
                 @else
                 <div class="bg-white p-5 rounded-3xl text-center sticky top-6">
-                    <img src="{{ asset('sewa/public/assets/svgs/login.svg') }}" class="h-12 w-12 mx-auto mb-4"
-                        alt="Login">
+                    <img src="{{ asset('sewa/public/assets/svgs/login.svg') }}" class="h-12 w-12 mx-auto mb-4" alt="Login">
                     <p class="text-dark mb-4">Login untuk memberikan ulasan</p>
-                    <a href="{{ route('login') }}"
-                        class="bg-primary text-white py-3 px-6 rounded-full font-medium inline-block hover:bg-primary-dark transition">
+                    <a href="{{ route('login') }}" class="bg-primary text-white py-3 px-6 rounded-full font-medium inline-block hover:bg-primary-dark transition">
                         Login Sekarang
                     </a>
                 </div>
@@ -232,7 +237,6 @@
         </div>
     </div>
 </section>
-
 
 <script src="https://unpkg.com/vue@next/dist/vue.global.js"></script>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -277,7 +281,6 @@
     integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <script src="{{ asset('sewa/public/scripts/script.js') }}"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- Pastikan Font Awesome sudah ada -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>

@@ -71,8 +71,14 @@
         </li>
         <li class="menu-item">
             <a href="/bookings" class="menu-link">
-                <i class="menu-icon icon-base ri ri-car-line"></i>
+                <i class="menu-icon icon-base ri ri-calendar-2-line"></i>
                 <div data-i18n="Tables">Booking</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/reports/bookings" class="menu-link">
+                <i class="menu-icon icon-base ri ri-file-excel-line"></i>
+                <div data-i18n="Tables">Laporan</div>
             </a>
         </li>
         <!-- Misc -->

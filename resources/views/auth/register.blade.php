@@ -68,29 +68,7 @@
                 <!-- Form Card -->
                 <form method="POST" action="{{ route('register') }}" class="bg-white p-[30px] pb-10 rounded-3xl max-w-[490px] w-full" id="uploadForm" enctype="multipart/form-data">
                     @csrf
-                    <!-- User Photo -->
-                    <div class="mb-[50px] flex justify-center">
-                        <div class="relative">
-                            <img src="{{ asset('sewa/public/assets/svgs/ic-default-photo.svg') }}" class="w-[120px] h-[120px] rounded-full"
-                                alt="Profile Photo" id="imageSrc">
-                            <a href="javascript:void(0);" id="btnUploadPhoto" class="">
-                                <img src="{{ asset('sewa/public/assets/svgs/ic-btn_upload.svg') }}"
-                                    class="w-[36px] h-[36px] rounded-full absolute right-[-7px] bottom-[9px]"
-                                    alt="Upload Photo">
-                            </a>
-                            <a href="javascript:void(0);" id="btnDeletePhoto" class="hidden">
-                                <img src="{{ asset('sewa/public/assets/svgs/ic-btn_delete.svg') }}"
-                                    class="w-[36px] h-[36px] rounded-full absolute right-[-7px] bottom-[9px]"
-                                    alt="Delete Photo">
-                            </a>
-                        </div>
-                        <input type="file" name="photo" id="photo" class="hidden"
-                            accept="image/x-png,image/jpg,image/jpeg">
-                        @error('photo')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="grid grid-cols-2 items-center gap-y-6 gap-x-4 lg:gap-x-[30px]">
+                  
                         <!-- Full Name -->
                         <div class="flex flex-col col-span-2 gap-3">
                             <label for="name" class="text-base font-semibold text-dark">

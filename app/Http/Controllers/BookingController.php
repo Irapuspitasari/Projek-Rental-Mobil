@@ -458,11 +458,13 @@ class BookingController extends Controller
                 'booking_id' => $booking->id,
                 'slug' => Str::slug(Str::random(10)),
                 'method' => $request->method,
-                'status' => 'Pending',
+                'status' => 'Paid',
                 'amount' => $request->amount,
                 'payment_reference' => $orderId,
-                'payment_date' => null,
+                'payment_date' => now(),
             ]);
+
+            $booking->update(['status' => 'Confirmed']);
 
             // Get Snap payment URL
             $snapToken = $midtransService->createTransaction($transactionDetails);

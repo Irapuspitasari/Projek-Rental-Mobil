@@ -10,6 +10,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,12 +26,9 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', [CarController::class, 'index']);
 Route::get('/car', [CarController::class, 'car']);
 
-Route::get('/dashboard', function () {
-    if (auth()->check() && auth()->user()->role === 'Admin') {
-        return view('dashboard');
-    }
-    return redirect('/');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

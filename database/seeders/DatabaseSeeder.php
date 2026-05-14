@@ -21,49 +21,49 @@ class DatabaseSeeder extends Seeder
 
         $brands = [
             [
-                'nama' => 'Toyota',
+                'name' => 'Toyota',
                 'slug' => 'toyota',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Honda',
+                'name' => 'Honda',
                 'slug' => 'honda',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Daihatsu',
+                'name' => 'Daihatsu',
                 'slug' => 'daihatsu',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Suzuki',
+                'name' => 'Suzuki',
                 'slug' => 'suzuki',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Mitsubishi',
+                'name' => 'Mitsubishi',
                 'slug' => 'mitsubishi',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Nissan',
+                'name' => 'Nissan',
                 'slug' => 'nissan',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Hyundai',
+                'name' => 'Hyundai',
                 'slug' => 'hyundai',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Wuling',
+                'name' => 'Wuling',
                 'slug' => 'wuling',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -74,43 +74,43 @@ class DatabaseSeeder extends Seeder
 
         $types = [
             [
-                'nama' => 'MPV',
+                'name' => 'MPV',
                 'slug' => 'mpv',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'SUV',
+                'name' => 'SUV',
                 'slug' => 'suv',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Sedan',
+                'name' => 'Sedan',
                 'slug' => 'sedan',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Hatchback',
+                'name' => 'Hatchback',
                 'slug' => 'hatchback',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Minibus',
+                'name' => 'Minibus',
                 'slug' => 'minibus',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'City Car',
+                'name' => 'City Car',
                 'slug' => 'city-car',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Double Cabin',
+                'name' => 'Double Cabin',
                 'slug' => 'double-cabin',
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -433,6 +433,11 @@ class BookingController extends Controller
                     'order_id' => $orderId,
                     'gross_amount' => $request->amount,
                 ],
+                'callbacks' => [
+                    'finish' => route('payment.return'),
+                    'unfinish' => route('payment.return'),
+                    'error' => route('payment.return'),
+                ],
                 'customer_details' => [
                     'first_name' => $booking->name,
                     'email' => $booking->user->email,
@@ -453,13 +458,11 @@ class BookingController extends Controller
                 'booking_id' => $booking->id,
                 'slug' => Str::slug(Str::random(10)),
                 'method' => $request->method,
-                'status' => 'Paid',
+                'status' => 'Pending',
                 'amount' => $request->amount,
                 'payment_reference' => $orderId,
-                'payment_date' => now(),
+                'payment_date' => null,
             ]);
-
-            $booking->update(['status' => 'Confirmed']);
 
             // Get Snap payment URL
             $snapToken = $midtransService->createTransaction($transactionDetails);
